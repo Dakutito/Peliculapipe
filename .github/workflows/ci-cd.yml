@@ -28,7 +28,7 @@ jobs:
 
       - name: 📦 Install backend dependencies
         working-directory: ./backend
-        run: npm ci
+        run: npm install
 
       - name: 🔍 Lint backend code
         working-directory: ./backend
@@ -144,100 +144,18 @@ jobs:
       - name: ✅ Code quality check passed
         run: echo "✅ Code quality checks completed"
 
-  # ====== JOB 5: DEPLOY TO VERCEL (Frontend) ======
-  deploy-frontend:
-    name: Deploy Frontend to Vercel
-    runs-on: ubuntu-latest
-    needs: [backend, frontend, security, code-quality]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-
-    steps:
-      - name: 📥 Checkout code
-        uses: actions/checkout@v3
-
-      - name: 📤 Download frontend build
-        uses: actions/download-artifact@v4
-        with:
-          name: frontend-build
-          path: frontend/dist
-
-      - name: 🚀 Deploy to Vercel
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          working-directory: ./frontend
-          vercel-args: "--prod"
-
-      - name: ✅ Frontend deployed
-        run: echo "✅ Frontend deployed to Vercel"
-
-  # ====== JOB 6: DEPLOY TO RAILWAY (Backend) ======
-  deploy-backend:
-    name: Deploy Backend to Railway
-    runs-on: ubuntu-latest
-    needs: [backend, frontend, security, code-quality]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-
-    steps:
-      - name: 📥 Checkout code
-        uses: actions/checkout@v3
-
-      - name: 🟢 Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: 🚀 Deploy to Railway
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-        run: |
-          npm install -g @railway/cli
-          cd backend
-          railway link ${{ secrets.RAILWAY_PROJECT_ID }} || echo "Already linked"
-          railway up
-
-      - name: ✅ Backend deployed
-        run: echo "✅ Backend deployed to Railway"
-
-  # ====== JOB 7: POST-DEPLOY VERIFICATION ======
-  verify-deployment:
-    name: Verify Deployment
-    runs-on: ubuntu-latest
-    needs: [deploy-frontend, deploy-backend]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-
-    steps:
-      - name: 🔍 Check Frontend Health
-        run: |
-          echo "Checking frontend deployment..."
-          curl -f ${{ secrets.FRONTEND_URL }} || echo "⚠️ Frontend health check failed"
-
-      - name: 🔍 Check Backend Health
-        run: |
-          echo "Checking backend deployment..."
-          curl -f ${{ secrets.BACKEND_URL }} || echo "⚠️ Backend health check failed"
-
-      - name: ✅ Deployment verification completed
-        run: |
-          echo "🎉 Deployment completed successfully!"
-          echo "📱 Frontend: ${{ secrets.FRONTEND_URL }}"
-          echo "🔧 Backend: ${{ secrets.BACKEND_URL }}"
-
-  # ====== JOB 8: NOTIFICATION ======
+  # ====== JOB 5: NOTIFICATION ======
   notify:
     name: Send Notifications
     runs-on: ubuntu-latest
-    needs: [verify-deployment]
+    needs: [backend, frontend, security, code-quality]
     if: always()
 
     steps:
       - name: 📢 Pipeline Status
         run: |
-          if [ "${{ needs.verify-deployment.result }}" == "success" ]; then
+          if [ "${{ needs.backend.result }}" == "success" ] && [ "${{ needs.frontend.result }}" == "success" ]; then
             echo "✅ Pipeline ejecutado exitosamente"
-            echo "🚀 Aplicación desplegada correctamente"
           else
             echo "❌ Pipeline falló. Revisar logs."
           fi
@@ -253,6 +171,5 @@ jobs:
           echo "Backend: ${{ needs.backend.result }}"
           echo "Frontend: ${{ needs.frontend.result }}"
           echo "Security: ${{ needs.security.result }}"
-          echo "Deploy Frontend: ${{ needs.deploy-frontend.result }}"
-          echo "Deploy Backend: ${{ needs.deploy-backend.result }}"
+          echo "Code Quality: ${{ needs.code-quality.result }}"
           echo "═══════════════════════════════"
