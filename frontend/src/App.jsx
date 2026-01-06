@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+//import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
@@ -8,6 +8,9 @@ import Register from './pages/Register';
 import MovieDetail from './pages/MovieDetail';
 import MyAccount from './pages/MyAccount';
 import './App.css';
+import { HashRouter as Router } from 'react-router-dom';
+
+
 
 function App() {
   return (
@@ -16,7 +19,7 @@ function App() {
         <div className="App">
           <Navbar />
           <main className="main-content">
-            <div Class="home-page">
+            <div className="home-page">
               <h2>Gestión de peliculas y series </h2>
               <span>Hecho por Tito Pérez y Alan Moreira</span>
             </div>
