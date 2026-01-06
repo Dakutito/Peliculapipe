@@ -8,6 +8,7 @@ COPY package-lock.json ./
 RUN npm install
 
 COPY . .
+RUN npm run 
 RUN npm run build
 
 # Etapa 2: servidor nginx
