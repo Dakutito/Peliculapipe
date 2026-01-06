@@ -1,23 +1,13 @@
-# Etapa 1: build
-FROM node:20-alpine AS build
+FROM node:20-alpine
 
 WORKDIR /app
 
-COPY package.json ./
-COPY package-lock.json ./
-RUN npm install
+COPY package*.json ./
+RUN npm install --production
 
 COPY . .
-RUN npm run 
-RUN npm run build
 
-# Etapa 2: servidor nginx
-FROM nginx:alpine
+EXPOSE 3000
 
-# Copiar build de Vite
-COPY --from=build /app/dist /usr/share/nginx/html
+CMD ["npm", "run", "start"]
 
-# Exponer puerto
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
