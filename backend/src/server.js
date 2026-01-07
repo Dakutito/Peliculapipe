@@ -59,7 +59,8 @@ const PORT = process.env.PORT || 5000;
 app.use(cors({
   origin: [
     'http://localhost:5173',
-    'https://peliculapipe.vercel.app'
+    //'https://peliculapipe.vercel.app'
+    'https://dakutito.github.io/Peliculapipe/'
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
