@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = "https://peliculapipe.onrender.com/api";
+
 
 // Películas
 export const getTrending = () => axios.get(`${API_URL}/movies/trending`);
