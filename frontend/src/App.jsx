@@ -1,5 +1,5 @@
 import React from 'react';
-import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
@@ -9,6 +9,9 @@ import MovieDetail from './pages/MovieDetail';
 import MyAccount from './pages/MyAccount';
 import './App.css';
 
+
+
+
 function App() {
   return (
     <Router>
@@ -17,10 +20,9 @@ function App() {
           <Navbar />
           <main className="main-content">
             <div className="home-page">
-              <h2>Gestión de peliculas y series</h2>
+              <h2>Gestión de peliculas y series </h2>
               <span>Hecho por Tito Pérez y Alan Moreira</span>
             </div>
-
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
