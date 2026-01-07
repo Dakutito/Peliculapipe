@@ -55,16 +55,17 @@ const userRoutes = require('./routes/user');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware - CORS configurado
+// ✅ CORS (ANTES DE LAS RUTAS)
 app.use(cors({
   origin: [
     'http://localhost:5173',
-    'https://peliculapipe-g5oy-bnkudk9qr-jairfingers-gmailcoms-projects.vercel.app/', // ← Reemplaza con tu URL de Vercel
-    'https://dakutito.github.io'
+    'https://peliculapipe.vercel.app'
   ],
-  credentials: true
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
+// Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -76,17 +77,17 @@ app.use('/api/ratings', ratingsRoutes);
 app.use('/api/lists', listsRoutes);
 app.use('/api/user', userRoutes);
 
-// Ruta de prueba
+// Ruta test
 app.get('/', (req, res) => {
   res.json({ message: '🎬 API de Catálogo de Películas funcionando correctamente' });
 });
 
-// Manejo de errores 404
+// 404
 app.use((req, res) => {
   res.status(404).json({ error: 'Ruta no encontrada' });
 });
 
-// Iniciar servidor
+// Start
 app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
 });
