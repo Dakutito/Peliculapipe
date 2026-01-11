@@ -34,12 +34,7 @@ app.use('/api/ratings', ratingsRoutes);
 app.use('/api/lists', listsRoutes);
 app.use('/api/user', userRoutes);
 
-// Ruta test
-app.get('/', (req, res) => {
-  res.json({ message: 'API de Catálogo de Películas funcionando correctamente' });
-});
-
-// Ruta base API (para Docker / Render)
+// Ruta base API
 app.get('/api', (req, res) => {
   res.json({
     message: 'API de Películas funcionando correctamente (Docker)',
@@ -47,6 +42,10 @@ app.get('/api', (req, res) => {
   });
 });
 
+// Ruta raíz
+app.get('/', (req, res) => {
+  res.json({ message: '🎬 API de Catálogo de Películas funcionando correctamente' });
+});
 
 // 404
 app.use((req, res) => {
