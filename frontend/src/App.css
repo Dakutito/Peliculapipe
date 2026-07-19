@@ -297,7 +297,6 @@ body {
   justify-content: space-between;
   align-items: flex-start;
   padding: 0.55rem;
-  opacity: 0;
   pointer-events: none;
   transition: opacity var(--transition-med);
 }
